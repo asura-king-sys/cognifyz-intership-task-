@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration Summary</title>
+</head>
+<body style="font-family: sans-serif; padding: 20px;">
+
+    <h1 style="color: green;">Success!</h1>
+    <p>Thank you for joining, <strong><%= name %></strong>.</p>
+
+    <hr>
+
+    <h3>Current Registered Users (Temporary Storage)</h3>
+    
+    <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead style="background-color: #f2f2f2;">
+            <tr>
+                <th style="padding: 8px;">ID / Timestamp</th>
+                <th style="padding: 8px;">Name</th>
+                <th style="padding: 8px;">Age</th>
+                <th style="padding: 8px;">Membership</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% allUsers.forEach(user => { %>
+                <tr>
+                    <td style="padding: 8px;"><%= user.id %></td>
+                    <td style="padding: 8px;"><%= user.name %></td>
+                    <td style="padding: 8px;"><%= user.age %></td>
+                    <td style="padding: 8px;"><%= user.tier %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+
+    <br>
+    <a href="/" style="display: inline-block; padding: 10px; background-color: #333; color: white; text-decoration: none; border-radius: 5px;">Register Another User</a>
+
+</body>
+</html>

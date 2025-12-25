@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Complex User Form</title>
+</head>
+<body>
+
+    <h2 style="font-family: Arial; color: #333;">Advanced User Registration</h2>
+
+    <% if (locals.error) { %>
+        <p id="server-error" style="color: red; font-weight: bold;"><%= error %></p>
+    <% } %>
+
+    <form action="/submit-form" method="POST" onsubmit="return validateForm()">
+        
+        <label>Name:</label><br>
+        <input type="text" id="username" name="userName"> 
+        <br><br>
+
+        <label>Age:</label><br>
+        <input type="number" id="userAge" name="userAge">
+        <br><br>
+
+        <label>Membership Type:</label><br>
+        <select name="membership" id="membership">
+            <option value="">--Select--</option>
+            <option value="free">Free</option>
+            <option value="premium">Premium</option>
+        </select>
+        <br><br>
+
+        <button type="submit">Submit Data</button>
+    </form>
+
+    <script>
+        function validateForm() {
+            const name = document.getElementById('username').value;
+            const age = document.getElementById('userAge').value;
+            const membership = document.getElementById('membership').value;
+
+            
+            if (name.length < 3) {
+                alert("Name must be at least 3 characters long.");
+                return false; 
+            }
+
+            
+            if (age <= 0 || age > 120) {
+                alert("Please enter a valid age.");
+                return false;
+            }
+
+            if (membership === "") {
+                alert("Please select a membership type.");
+                return false;
+            }
+
+            return true; 
+        }
+    </script>
+
+</body>
+</html>
