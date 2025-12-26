@@ -3,91 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Task 3 Form</title>
+    <title>Task 4: Full Dynamic Form</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-    <nav class="navbar navbar-dark bg-dark mb-5">
+    <nav class="navbar navbar-dark bg-dark mb-5 shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="#">Cognifyz Portal</a>
+            <span class="navbar-brand">Cognifyz Internship | Task 4</span>
         </div>
     </nav>
 
     <div class="container">
-        <div class="row">
-            <div class="col-md-5 d-none d-md-block">
-                <div class="p-4">
-                    <h2>Welcome Back!</h2>
-                    <p class="text-muted">Please fill out the form to register your membership. We use secure server-side validation to protect your data.</p>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">✔️ Instant validation</li>
-                        <li class="list-group-item">✔️ Secure data handling</li>
-                        <li class="list-group-item">✔️ Responsive interface</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="col-md-7">
-                <div class="card shadow-sm">
-                    <div class="card-body p-5">
-                        <h3 class="card-title mb-4">Register User</h3>
-
-                        <% if (locals.error) { %>
-                            <div class="alert alert-danger error-message">
-                                <strong>Error:</strong> <%= error %>
-                            </div>
-                        <% } %>
-
-                        <form action="/submit-form" method="POST" onsubmit="return validateForm()">
+        <div class="row justify-content-center">
+            
+            <div class="col-md-6" id="form-container">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-4">
+                        <h2 class="mb-4 text-center">Create Account</h2>
+                        <form id="regForm">
                             <div class="mb-3">
                                 <label class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="username" name="userName" placeholder="John Doe">
+                                <input type="text" name="userName" class="form-control" required>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Age</label>
-                                <input type="number" class="form-control" id="userAge" name="userAge">
+                                <input type="number" name="userAge" class="form-control" required>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Membership Type</label>
-                                <select class="form-select" name="membership" id="membership">
-                                    <option value="">Choose...</option>
-                                    <option value="free">Free</option>
-                                    <option value="premium">Premium</option>
-                                </select>
+                                <label class="form-label">Password</label>
+                                <input type="password" id="pw" name="password" class="form-control" oninput="validatePassword()" required>
+                                <div class="progress mt-2" style="height: 6px;">
+                                    <div id="str-bar" class="progress-bar" style="width: 0%"></div>
+                                </div>
+                                <small id="pw-hint" class="text-muted">Min 8 chars, 1 number, 1 uppercase</small>
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100 btn-custom">Submit Registration</button>
+                            <button type="submit" class="btn btn-primary w-100 btn-custom mt-3">Submit Data</button>
                         </form>
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-6 d-none" id="success-section">
+                <div class="card border-0 shadow-lg text-center p-5">
+                    <div class="display-1 text-success">✓</div>
+                    <h2 id="welcome-msg">Success!</h2>
+                    <p class="text-muted">Your data was saved dynamically without refreshing the page.</p>
+                    <button class="btn btn-dark mt-3" onclick="location.reload()">Reset Form</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <script>
-        function validateForm() {
-            const name = document.getElementById('username').value;
-            const age = document.getElementById('userAge').value;
-            const membership = document.getElementById('membership').value;
+        // Real-time DOM Manipulation: Password Strength
+        function validatePassword() {
+            const val = document.getElementById('pw').value;
+            const bar = document.getElementById('str-bar');
+            const hint = document.getElementById('pw-hint');
+            let score = 0;
 
-            if (name.length < 3) {
-                alert("Name must be at least 3 characters.");
-                return false;
-            }
-            if (age <= 0 || age > 120) {
-                alert("Please enter a valid age.");
-                return false;
-            }
-            if (membership === "") {
-                alert("Please select a membership.");
-                return false;
-            }
-            return true;
+            if (val.length >= 8) score++;
+            if (/[0-9]/.test(val)) score++;
+            if (/[A-Z]/.test(val)) score++;
+
+            const colors = ['bg-danger', 'bg-danger', 'bg-warning', 'bg-success'];
+            const widths = ['0%', '33%', '66%', '100%'];
+            
+            bar.style.width = widths[score];
+            bar.className = `progress-bar ${colors[score]}`;
+            hint.innerText = score === 3 ? "Strong Password!" : "Keep typing...";
         }
+
+        
+        document.getElementById('regForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new URLSearchParams(new FormData(e.target));
+
+            try {
+                const response = await fetch('/submit-form', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    
+                    document.getElementById('form-container').classList.add('d-none');
+                    document.getElementById('success-section').classList.remove('d-none');
+                    document.getElementById('welcome-msg').innerText = `Welcome, ${data.user.name}!`;
+                }
+            } catch (err) {
+                alert("Submission failed!");
+            }
+        });
     </script>
 </body>
 </html>

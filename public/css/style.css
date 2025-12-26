@@ -30,7 +30,34 @@ body {
     }
 }
 
-/* Table Hover Smoothness */
+
 .table-hover tbody tr {
     transition: background-color 0.2s ease;
+}
+
+.progress-bar {
+    transition: width 0.4s ease, background-color 0.4s ease;
+}
+
+
+#password-text, #match-feedback {
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-top: 5px;
+    display: block;
+}
+
+#success-section:not(.d-none) {
+    animation: fadeInScale 0.5s ease-out forwards;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }

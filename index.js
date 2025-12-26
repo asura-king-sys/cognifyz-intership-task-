@@ -4,56 +4,40 @@ import bodyParser from "body-parser";
 const app = express();
 const port = 3000;
 
+
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("public")); 
 
-app.use(express.static("public"));
+let users = []; 
 
-const users = []; 
 
 app.get("/", (req, res) => {
-    res.render("form.ejs", { error: null });
+    res.render("form.ejs");
 });
 
 
 app.post("/submit-form", (req, res) => {
-    const { userName, userAge, membership } = req.body;
+    const { userName, userAge, membership, password } = req.body;
 
     
-    if (!userName || userName.trim().length < 3) {
-        return res.render("form.ejs", { error: "Server says: Name is too short!" });
+    if (!userName || !userAge || password.length < 8) {
+        return res.status(400).json({ success: false, message: "Invalid Data" });
     }
 
-   
-    const ageNum = parseInt(userAge);
-    if (isNaN(ageNum) || ageNum <= 0 || ageNum > 120) {
-        return res.render("form.ejs", { error: "Server says: Invalid Age!" });
-    }
-
-   
-    if (!membership) {
-        return res.render("form.ejs", { error: "Server says: Please select a membership type!" });
-    }
-
-    
-    const newUser = {
+    const newUser = { 
         id: Date.now(), 
-        name: userName,
-        age: ageNum,
-        tier: membership
-    };
-
-    users.push(newUser);
-    
-    
-    console.log("Current Users in Memory:", users);
-
-    
-    res.render("result.ejs", { 
         name: userName, 
-        allUsers: users 
-    });
+        age: userAge, 
+        tier: membership 
+    };
+    
+    users.push(newUser);
+    console.log("Current Users:", users);
+
+    
+    res.json({ success: true, user: newUser });
 });
 
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Task 4 Server running at http://localhost:${port}`);
 });
