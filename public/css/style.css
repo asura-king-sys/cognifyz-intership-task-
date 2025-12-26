@@ -1,0 +1,36 @@
+/* Custom Styles for Task 3 */
+body {
+    background-color: #f8f9fa;
+    transition: background-color 0.5s ease;
+}
+
+/* Advanced Button Animation */
+.btn-custom {
+    transition: all 0.3s ease-in-out !important;
+}
+
+.btn-custom:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+/* Fade-in Animation for Errors and Success Cards */
+.animate-in {
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(-10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* Table Hover Smoothness */
+.table-hover tbody tr {
+    transition: background-color 0.2s ease;
+}
